@@ -1,12 +1,12 @@
 # 2048-rl
 
-我的AI課程期末專題報告，用強化學習做一個2048遊戲代理人
-可以選擇用Qlearning或者A2C兩種算法來執行
+我的AI課程期末專題報告，用強化學習做一個2048遊戲代理人  
+可以選擇用Qlearning或者A2C兩種算法來執行  
 在終端下指令：`python main.py`就可以開始執行，預設的指令式使用Qlearning，並且載入已經訓練好的q_table
 
-可以使用***-algorithm***來決定算法，***-load***來決定是否要載入模型
-例如：
-`python main.py -algorithm a2c -load False`
+可以使用 ***-algorithm*** 來決定算法， ***-load*** 來決定是否要載入模型  
+例如：  
+`python main.py -algorithm a2c -load False`  
 就會使用A2C算法，並且重新訓練一個模型
 
 ---
