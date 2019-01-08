@@ -54,24 +54,15 @@ def add_two(mat):
 # 3 marks for correct checking
 
 def game_state(mat):
-    reward = 0
     over = True
-    total = 0
+    total, big = 0, 0
     for i in range(len(mat)):
         for j in range(len(mat[0])):
             total += mat[i][j]
-            if mat[i][j]==64:
-                reward+=0.1
-            elif mat[i][j]==128:
-                reward+=0.2
-            elif mat[i][j]==256:
-                reward+=0.3
-            elif mat[i][j]==512:
-                reward+=0.4
-            elif mat[i][j]==1024:
-                reward+=0.5
-            elif mat[i][j]==2048:
-                return (10, True)
+            if big <= mat[i][j]:
+                big = mat[i][j]
+            if mat[i][j]==2048:
+                return (True, 2048)
     for i in range(len(mat)-1): #intentionally reduced to check the row on the right and below
         for j in range(len(mat[0])-1): #more elegant to use exceptions but most likely this will be their solution
             if mat[i][j]==mat[i+1][j] or mat[i][j+1]==mat[i][j]:
@@ -87,22 +78,7 @@ def game_state(mat):
         if mat[j][len(mat)-1]==mat[j+1][len(mat)-1]:
             over = False
 
-    if (total<=100):
-        reward-=2
-    elif (total<=200):
-        reward-=1
-    elif (total<=300):
-        reward-=0.5
-    elif (total<=400):
-        reward+=0.2
-    elif (total<=500):
-        reward+=0.5
-    else :
-        reward+=0.7
-
-    if over:
-        reward -= 1
-    return (reward, over)
+    return (over, big)
 
 ###########
 # Task 2a #

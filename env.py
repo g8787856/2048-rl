@@ -1,5 +1,5 @@
 from tkinter import *
-from logic import *
+from env_logic import *
 import time
 # from random import *
 
@@ -31,6 +31,7 @@ class Game(Frame):
 
         self.commands = { KEY_UP: up, KEY_DOWN: down, KEY_LEFT: left, KEY_RIGHT: right }
         self.n_actions = len(self.commands)
+        self.n_features = 16
 
         self.grid_cells = []
         self.init_grid()
@@ -40,6 +41,7 @@ class Game(Frame):
         # self.mainloop()
         self.update_idletasks()
         self.update()
+        self.matrix = []
         
     def init_grid(self):
         background = Frame(self, bg=BACKGROUND_COLOR_GAME, width=SIZE, height=SIZE)
@@ -74,13 +76,41 @@ class Game(Frame):
         self.update()
 
     def step(self, action):
-        self.matrix, done = self.commands[action](self.matrix)
         reward = 0
         over = False
+        now_big, new_big = 0, 0
+        for i in range(len(self.matrix)):
+            for j in range(len(self.matrix[0])):
+                if now_big <= self.matrix[i][j]:
+                    now_big = self.matrix[i][j]
+
+        self.matrix, done = self.commands[action](self.matrix)
+
         if done:
             self.matrix = add_two(self.matrix)
             self.update_grid_cells()
-            reward, over = game_state(self.matrix)
+            over, new_big = game_state(self.matrix)
+
+        if new_big == 2048:
+            reward = 1
+        elif (new_big - now_big == 16):
+            reward = 0.1
+        elif (new_big - now_big == 32):
+            reward = 0.2
+        elif (new_big - now_big == 64):
+            reward = 0.3
+        elif (new_big - now_big == 128):
+            reward = 0.4
+        elif (new_big - now_big == 256):
+            reward = 0.6
+        elif (new_big - now_big == 512):
+            reward = 0.8
+
+        if new_big == 0:
+            reward = -0.5
+
+        if over and new_big != 2048:
+            reward = -1
 
         return self.matrix, reward, over
 

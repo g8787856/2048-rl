@@ -1,21 +1,22 @@
-"""
-This part of code is the Q learning brain, which is a brain of the agent.
-All decisions are made in here.
-
-View more on my tutorial page: https://morvanzhou.github.io/tutorials/
-"""
-
 import numpy as np
 import pandas as pd
-
+import h5py
 
 class QLearningTable:
-    def __init__(self, actions, learning_rate=0.1, reward_decay=0.9, e_greedy=0.9):
+    def __init__(self, actions, load, learning_rate=0.1, reward_decay=0.9, e_greedy=0.9):
+        self.render = True
+        self.load_model = load
+
         self.actions = actions  # a list 上下左右
         self.lr = learning_rate
         self.gamma = reward_decay 
         self.epsilon = e_greedy
         self.q_table = pd.DataFrame(columns=self.actions, dtype=np.float64)
+
+        if self.load_model:
+            self.q_table = self.load_weights("./save_model/2048_qlearning.h5")
+            print('load q_table: ', self.q_table)
+
 
     def choose_action(self, observation):
         self.check_state_exist(observation)
@@ -49,3 +50,11 @@ class QLearningTable:
                     name=state,
                 )
             )
+
+    def save_weights(self, location):
+        self.q_table.to_hdf(location, key='df', mode='w')
+
+    def load_weights(self, location):
+        return pd.read_hdf(location)
+
+
